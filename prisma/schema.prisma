@@ -9,3 +9,112 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model User {
+  id            Int       @id @default(autoincrement())
+  firstName     String    
+  lastName      String
+  email         String    @unique
+  password      String
+
+  userRating    UserRating[]
+  commentaries  Commentaries[]
+  userFavorites UserFavorites[]
+
+  @@map("users")
+}
+
+model Cellphone {
+  id                  Int       @id @default(autoincrement())
+  name                String    @unique
+  price               Float?
+  processor           String
+  RAM                 Int
+  storage             Int
+  mAh                 Int
+  have5G              Boolean
+  displayType         String
+  displaySize         Float
+  displayResolution   String
+  displayFPS          Int
+  OS                  String
+  brand               String
+
+  cameraFeatures      CameraFeatures[]
+  videoFeatures       VideoFeatures[]
+  accessories         Accessoreis[]
+
+  userRating          UserRating[]
+  commentaries        Commentaries[]
+  userFavorites       UserFavorites[]
+
+  @@map("cellphones")
+}
+
+model CameraFeatures {
+  id                  Int           @id @default(autoincrement())
+  phoneId             Int
+  cellphones          Cellphone     @relation(fields: [phoneId], references: [id])
+  megaPixels          Int
+  apertureSize        Float
+  stabilization       String
+  macro               Boolean
+  panorama            Boolean
+  ultrawide           Boolean
+
+  @@map("cameraFeatures")
+}
+
+model VideoFeatures {
+  id                  Int           @id @default(autoincrement())
+  phoneId             Int
+  cellphones          Cellphone     @relation(fields: [phoneId], references: [id])
+  maxRsolution        String
+  maxFPS              Int
+  slowmotion          Boolean
+  stereoSoundRec      Boolean
+
+  @@map("videoFeatures")
+}
+
+model Accessoreis {
+  id                  Int           @id @default(autoincrement())
+  phoneId             Int
+  cellphones          Cellphone     @relation(fields: [phoneId], references: [id])
+  earphone            Boolean
+  charger             Boolean
+  chargerPower        Int?
+  pen                 Boolean
+  phoneCase           Boolean
+  screenProtector     Boolean
+
+  @@map("accessories")
+}
+
+model UserRating {
+  id                  Int           @id @default(autoincrement())
+  userId              Int
+  users               User          @relation(fields: [userId], references: [id])
+  phoneId             Int
+  cellphones          Cellphone     @relation(fields: [phoneId], references: [id])
+  rate                Int
+
+  @@map("userRating")
+}
+
+model Commentaries {
+  id                  Int           @id @default(autoincrement())
+  userId              Int
+  users               User          @relation(fields: [userId], references: [id])
+  phoneId             Int
+  cellphones          Cellphone     @relation(fields: [phoneId], references: [id])
+  commentary          String
+}
+
+model UserFavorites {
+  id                  Int           @id @default(autoincrement())
+  userId              Int
+  users               User          @relation(fields: [userId], references: [id])
+  phoneId             Int
+  cellphones          Cellphone     @relation(fields: [phoneId], references: [id])
+}
