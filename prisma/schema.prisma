@@ -11,22 +11,22 @@ datasource db {
 }
 
 model User {
-  id            Int       @id @default(autoincrement())
-  firstName     String    
-  lastName      String
-  email         String    @unique
-  password      String
+  id                  Int           @id @default(autoincrement())
+  firstName           String    
+  lastName            String
+  email               String        @unique
+  password            String
 
-  userRating    UserRating[]
-  commentaries  Commentaries[]
-  userFavorites UserFavorites[]
+  userRating          UserRating[]
+  commentaries        Commentaries[]
+  userFavorites       UserFavorites[]
 
   @@map("users")
 }
 
 model Cellphone {
-  id                  Int       @id @default(autoincrement())
-  name                String    @unique
+  id                  Int           @id @default(autoincrement())
+  name                String        @unique
   price               Float?
   processor           String
   RAM                 Int
@@ -109,6 +109,8 @@ model Commentaries {
   phoneId             Int
   cellphones          Cellphone     @relation(fields: [phoneId], references: [id])
   commentary          String
+
+  @@map("commentaries")
 }
 
 model UserFavorites {
@@ -117,4 +119,6 @@ model UserFavorites {
   users               User          @relation(fields: [userId], references: [id])
   phoneId             Int
   cellphones          Cellphone     @relation(fields: [phoneId], references: [id])
+
+  @@map("userFavorites")
 }
