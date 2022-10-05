@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { CreateUserData } from "../repositories/authRepository";
-import * as authService from "../services/authService"
+import { CreateUserData } from "../repositories/authRepository.js";
+import * as authService from "../services/authService.js";
 
 export async function signIn(req: Request, res: Response) {
     const user:CreateUserData = req.body;
