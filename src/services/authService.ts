@@ -4,13 +4,14 @@ import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 
 import * as authRepository from "../repositories/authRepository.js";
-import { conflictError, notFoundError, unauthorizedError } from "../utils/errorUtils.js";
+import * as userService from "./userService.js"
+import { conflictError } from "../utils/errorUtils.js";
 import { CreateUserData } from "../repositories/authRepository.js";
 
 dotenv.config();
 
 export async function signIn(loginData: CreateUserData) {
-    const user = await getUserOrFail(loginData);
+    const user = await userService.getUserOrFail(loginData);
     const token = jwt.sign({ userId: user }, process.env.JWT_SECRET);
 
     return token;
@@ -24,14 +25,4 @@ export async function signUp(createUserData: CreateUserData) {
     const hashedPassword = bcrypt.hashSync(createUserData.password, SALT);
   
     await authRepository.insert({ ...createUserData, password: hashedPassword });
-}
-
-export async function getUserOrFail(loginData: CreateUserData) {
-    const user = await authRepository.findByEmail(loginData.email);
-    if (!user) throw unauthorizedError("Invalid credentials");
-  
-    const isPasswordValid = bcrypt.compareSync(loginData.password, user.password);
-    if (!isPasswordValid) throw unauthorizedError("Invalid credentials");
-  
-    return user;
 }
